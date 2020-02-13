@@ -8,7 +8,6 @@ header {
 header a:link {
   text-decoration: none;
 }
-
 header img {
   max-width: 64px;
 }
@@ -32,10 +31,4 @@ img.product-tile {
 /* Page specific styles */
 body.product-list {
 
-}
-
-a.order-link a.order-link:visited a.order-link:link
-{
-  color: black;
-  text-decoration: none;
 }
