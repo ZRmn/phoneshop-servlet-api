@@ -6,15 +6,17 @@
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <jsp:useBean id="cartItems" type="java.util.ArrayList" scope="request"/>
 <tags:master pageTitle="${product.description}">
-    <span>Cart: </span>
-    <c:out value="${cartItems.toString()}"/>
+    <p>
+        <jsp:include page="/miniCart"/>
+    </p>
+
     <c:if test="${not empty param.success}">
-        <div style="color: green">Successfully added</div>
+        <p style="color: green">Successfully added</p>
     </c:if>
     <c:if test="${not empty errorMessage}">
-        <div style="color: red">${errorMessage}</div>
+        <p style="color: red">${errorMessage}</p>
     </c:if>
-    <h1>Details</h1>
+    <h3>Details</h3>
 
     <table>
         <tr>
