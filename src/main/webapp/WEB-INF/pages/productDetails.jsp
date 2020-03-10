@@ -4,7 +4,16 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
+<jsp:useBean id="cartItems" type="java.util.ArrayList" scope="request"/>
 <tags:master pageTitle="${product.description}">
+    <span>Cart: </span>
+    <c:out value="${cartItems.toString()}"/>
+    <c:if test="${not empty param.success}">
+        <div style="color: green">Successfully added</div>
+    </c:if>
+    <c:if test="${not empty errorMessage}">
+        <div style="color: red">${errorMessage}</div>
+    </c:if>
     <h1>Details</h1>
 
     <table>
@@ -45,4 +54,13 @@
             </td>
         </tr>
     </table>
+    <form method="post" action="${product.id}">
+        <p>
+            <span>Quantity: </span>
+            <input name="quantity" value="${empty quantity ? 1 : quantity}" style="text-align: right"/>
+            <button type="submit">Add</button>
+        </p>
+    </form>
+
+    <tags:recentlyViewed/>
 </tags:master>
