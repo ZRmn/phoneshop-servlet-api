@@ -79,6 +79,10 @@
                     <input type="submit" value="Update"/>
                 </p>
             </form>
+
+            <form action="checkout">
+                <input type="submit" value="Place order"/>
+            </form>
         </c:when>
         <c:otherwise>
             <h3>Cart is empty</h3>

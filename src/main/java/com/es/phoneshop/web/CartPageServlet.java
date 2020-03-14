@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
@@ -23,8 +24,9 @@ public class CartPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("cart", cartService.getCart(request.getSession()));
-        request.setAttribute("totalPrice", cartService.calculateTotalPrice(request.getSession()));
+        Cart cart = cartService.getCart(request.getSession());
+        request.setAttribute("cart", cart);
+        request.setAttribute("totalPrice", cartService.calculateTotalPrice(cart));
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
     }
 
@@ -33,8 +35,8 @@ public class CartPageServlet extends HttpServlet {
         String[] productIds = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
         NumberFormat format = NumberFormat.getInstance(request.getLocale());
-
-        String[] errors = updateItems(request.getSession(), productIds, quantities, format);
+        Cart cart = cartService.getCart(request.getSession());
+        String[] errors = updateItems(cart, productIds, quantities, format);
         boolean isSuccessfully = Arrays.stream(errors).allMatch(Objects::isNull);
 
         if (isSuccessfully) {
@@ -46,7 +48,7 @@ public class CartPageServlet extends HttpServlet {
         }
     }
 
-    private String[] updateItems(HttpSession session, String[] productIds, String[] quantities, NumberFormat format) {
+    private String[] updateItems(Cart cart, String[] productIds, String[] quantities, NumberFormat format) {
         String[] errors = new String[productIds.length];
 
         for (int i = 0; i < productIds.length; i++) {
@@ -58,7 +60,7 @@ public class CartPageServlet extends HttpServlet {
                     throw new IllegalStateException();
                 }
 
-                cartService.update(session, productId, quantity);
+                cartService.update(cart, productId, quantity);
             } catch (ParseException e) {
                 errors[i] = "Quantity should be a number";
             } catch (OutOfStockException e) {

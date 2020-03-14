@@ -44,9 +44,8 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void add(HttpSession session, Long productId, int quantity) throws OutOfStockException {
+    public void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
         Product product = productDao.getProduct(productId);
-        Cart cart = getCart(session);
 
         Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
@@ -65,9 +64,8 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void update(HttpSession session, Long productId, int quantity) throws OutOfStockException {
+    public void update(Cart cart, Long productId, int quantity) throws OutOfStockException {
         Product product = productDao.getProduct(productId);
-        Cart cart = getCart(session);
 
         if (product.getStock() < quantity) {
             throw new OutOfStockException(product, quantity);
@@ -79,17 +77,13 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void delete(HttpSession session, Long productId) {
+    public void delete(Cart cart, Long productId) {
         Product product = productDao.getProduct(productId);
-        Cart cart = getCart(session);
-
         cart.getCartItems().removeIf(item -> item.getProduct().equals(product));
     }
 
     @Override
-    public int calculateTotalQuantity(HttpSession session) {
-        Cart cart = getCart(session);
-
+    public int calculateTotalQuantity(Cart cart) {
         return cart.getCartItems().stream()
                 .map(CartItem::getQuantity)
                 .reduce(0, Integer::sum);
@@ -102,9 +96,7 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public BigDecimal calculateTotalPrice(HttpSession session) {
-        Cart cart = getCart(session);
-
+    public BigDecimal calculateTotalPrice(Cart cart) {
         return cart.getCartItems().stream()
                 .map(this::getItemPrice)
                 .reduce(BigDecimal.valueOf(0), BigDecimal::add);

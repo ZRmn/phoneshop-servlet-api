@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 
@@ -23,8 +24,8 @@ public class CartItemDeleteServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long productId = extractId(request);
-
-        cartService.delete(request.getSession(), productId);
+        Cart cart = cartService.getCart(request.getSession());
+        cartService.delete(cart, productId);
 
         doGet(request, response);
     }

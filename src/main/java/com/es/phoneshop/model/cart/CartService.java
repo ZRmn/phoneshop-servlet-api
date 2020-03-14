@@ -7,13 +7,13 @@ public interface CartService {
 
     Cart getCart(HttpSession session);
 
-    void add(HttpSession session, Long productId, int quantity) throws OutOfStockException;
+    void add(Cart cart, Long productId, int quantity) throws OutOfStockException;
 
-    void update(HttpSession session, Long productId, int quantity) throws OutOfStockException;
+    void update(Cart cart, Long productId, int quantity) throws OutOfStockException;
 
-    void delete(HttpSession session, Long productId);
+    void delete(Cart cart, Long productId);
 
-    int calculateTotalQuantity(HttpSession session);
+    int calculateTotalQuantity(Cart cart);
 
-    BigDecimal calculateTotalPrice(HttpSession session);
+    BigDecimal calculateTotalPrice(Cart cart);
 }

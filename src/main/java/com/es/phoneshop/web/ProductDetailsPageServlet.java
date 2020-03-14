@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Deque;
 
 @WebServlet("/products/*")
 public class ProductDetailsPageServlet extends HttpServlet {
@@ -48,11 +48,12 @@ public class ProductDetailsPageServlet extends HttpServlet {
         NumberFormat format = NumberFormat.getInstance(request.getLocale());
 
         try {
+            Cart cart = cartService.getCart(request.getSession());
             int quantity = format.parse(request.getParameter("quantity")).intValue();
             if (quantity <= 0) {
                 throw new IllegalStateException();
             }
-            cartService.add(request.getSession(), productId, quantity);
+            cartService.add(cart, productId, quantity);
         } catch (OutOfStockException e) {
             doGetWithErrorMessage("Error. Max quantity is " + productDao.getProduct(productId).getStock(), request, response);
             return;
