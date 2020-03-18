@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,6 +49,7 @@ public class ArrayListProductDao implements ProductDao {
         }
 
         class Pair<T, U> {
+
             private T first;
             private U second;
 
@@ -134,5 +136,35 @@ public class ArrayListProductDao implements ProductDao {
         }
 
         return ids[ids.length - 1] + 1;
+    }
+
+    @Override
+    public List<Product> findProductsByDescriptionWithAnyWord(String[] words) {
+        return products.stream()
+                .filter(product -> {
+                    return Stream.of(words)
+                            .anyMatch(word -> product.getDescription().toLowerCase().contains(word));
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Product> findProductsByDescriptionWithAllWords(String[] words) {
+        return products.stream()
+                .filter(product -> {
+                    return Stream.of(words)
+                            .allMatch(word -> product.getDescription().toLowerCase().contains(word));
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Product> filterProducts(List<Product> products, List<Predicate<Product>> predicates) {
+        Predicate<Product> compositePredicate = predicates.stream()
+                .reduce(predicate -> true, Predicate::and);
+
+        return products.stream()
+                .filter(compositePredicate)
+                .collect(Collectors.toList());
     }
 }

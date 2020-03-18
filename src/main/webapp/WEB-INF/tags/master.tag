@@ -17,6 +17,10 @@
     <a href="${pageContext.servletContext.contextPath}/cart" style="float: right; margin-right: 20px">
       Cart
     </a>
+
+    <a href="${pageContext.servletContext.contextPath}/advancedSearch" style="float: right; margin-right: 50px">
+      Search
+    </a>
   </header>
   <main>
     <jsp:doBody/>
