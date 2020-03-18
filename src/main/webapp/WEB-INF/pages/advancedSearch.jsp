@@ -18,14 +18,14 @@
             Min price
             <input name="minPrice" value="${param.minPrice}">
             <c:if test="${not empty minPriceError}">
-                ${minPriceError}
+                <p style="color: red">${minPriceError}</p>
             </c:if>
         </p>
         <p>
             Max price
             <input name="maxPrice" value="${param.maxPrice}">
             <c:if test="${not empty maxPriceError}">
-                ${maxPriceError}
+                <p style="color: red">${maxPriceError}</p>
             </c:if>
         </p>
         <input type="hidden" name="show">

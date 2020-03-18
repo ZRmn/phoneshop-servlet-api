@@ -42,24 +42,28 @@ public class AdvancedSearchServlet extends HttpServlet {
 
             boolean hasErrors = false;
 
-            try {
-                minPrice = parsePrice(minPriceAsString, format);
-            } catch (ParseException e) {
-                request.setAttribute("minPriceError", "Should be a number");
-                hasErrors = true;
-            } catch (IllegalStateException e) {
-                request.setAttribute("minPriceError", "Should be greater than 0");
-                hasErrors = true;
+            if(!minPriceAsString.isEmpty()){
+                try {
+                    minPrice = parsePrice(minPriceAsString, format);
+                } catch (ParseException e) {
+                    request.setAttribute("minPriceError", "Should be a number");
+                    hasErrors = true;
+                } catch (IllegalStateException e) {
+                    request.setAttribute("minPriceError", "Should be greater than 0");
+                    hasErrors = true;
+                }
             }
 
-            try {
-                maxPrice = parsePrice(maxPriceAsString, format);
-            } catch (ParseException e) {
-                request.setAttribute("maxPriceError", "Should be a number");
-                hasErrors = true;
-            } catch (IllegalStateException e) {
-                request.setAttribute("maxPriceError", "Should be greater than 0");
-                hasErrors = true;
+            if(!maxPriceAsString.isEmpty()) {
+                try {
+                    maxPrice = parsePrice(maxPriceAsString, format);
+                } catch (ParseException e) {
+                    request.setAttribute("maxPriceError", "Should be a number");
+                    hasErrors = true;
+                } catch (IllegalStateException e) {
+                    request.setAttribute("maxPriceError", "Should be greater than 0");
+                    hasErrors = true;
+                }
             }
 
             if (!hasErrors) {
@@ -91,9 +95,6 @@ public class AdvancedSearchServlet extends HttpServlet {
         if (maxPrice != null) {
             predicates.add(product -> product.getCurrentPriceData().getPrice().compareTo(maxPrice) <= 0);
         }
-
-        Predicate<Product> compositePredicate = predicates.stream()
-                .reduce(predicate -> true, Predicate::and);
 
         List<Product> products;
         String[] words = description.toLowerCase().split(" ");
